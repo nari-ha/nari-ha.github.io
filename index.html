@@ -1,8 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    땔롱
+    <canvas id="heartCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("heartCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let t = 0;
+        const scale = 15; // 크기를 조정하여 통통한 느낌 강화
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2 + 20; // 하트를 조금 아래로 조정
+
+        function heartFunction(t) {
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 14 * Math.cos(t) - 6 * Math.cos(2 * t) - 3 * Math.cos(3 * t) - 2 * Math.cos(4 * t); 
+            return { x: x * scale, y: -y * scale };
+        }
+
+        function drawHeart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            
+            for (let i = 0; i <= t; i += 0.05) {
+                const point = heartFunction(i);
+                ctx.lineTo(centerX + point.x, centerY + point.y);
+            }
+
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            if (t < Math.PI * 2) {
+                t += 0.05;
+                requestAnimationFrame(drawHeart);
+            }
+        }
+
+        drawHeart();
+    </script>
 </body>
 </html>
